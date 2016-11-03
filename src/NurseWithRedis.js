@@ -3,7 +3,7 @@
  * redisでは重複検査メソッドなどがデフォルトで存在する
  * index操作を可能にするためにハッシュ型を採択
  */
-var redis = require("redis"),
+const redis = require("redis"),
   client = redis.createClient(),
   bluebird = require("bluebird");
 
@@ -13,8 +13,7 @@ var redis = require("redis"),
 // }
 
 module.exports = function (robot) {
-  var key = "sites";
-  console.log("robot: ", robot); //@@
+  const key = "sites";
   // const key = channelKey || "key"; //default key is "sites"
 
   /** Implement **/
@@ -23,7 +22,7 @@ module.exports = function (robot) {
    * @param <none>
    * @return <Hash> { 'http://yahoo.co.jp': '200', 'https://google.com': '200' } -> forEachで処理shori
    */
-  var getList = function (callback) {
+  const getList = function (callback) {
     client.hgetall(key, callback);
   };
 
@@ -33,12 +32,12 @@ module.exports = function (robot) {
    * @param <Array, Function> dataArray, callback (required) data array adding into list.
    * @return <String>  Simple string reply (http://redis.io/topics/protocol#simple-string-reply)
    */
-  var addUrl = function (dataArray, callback) {
+  const addUrl = function (dataArray, callback) {
     /* dataArray: 元のurl,statusのarray, _urlArray: hkeysの検索結果のarray */
     console.log("dataArray1: ", dataArray); //@@
 
     //swap用
-    var _dataArray = [];
+    let _dataArray = [];
     console.log("_dataArray1: ", _dataArray); //@@ 追加するURLsを格納するarray
 
     //eliminate existing elements from dataArray
@@ -97,7 +96,7 @@ module.exports = function (robot) {
    * @return <integer> the number of removed elements.
    */
   /* remove */
-  var removeUrl = function (index, callback) {
+  const removeUrl = function (index, callback) {
     /* 複数Urlに対応 */
     // var delUrlArray = []; //削除するurl
     // client.multi()
@@ -113,7 +112,7 @@ module.exports = function (robot) {
     //   .hdel(key, delUrlArray, callback)
     //   .exec();
 
-    var urlArray; //削除するurl(swap用)
+    let urlArray; //削除するurl(swap用)
     client.multi()
       .hkeys(key, function (err, res) {
         console.log("res: ", res); //@@ aray
@@ -151,8 +150,8 @@ module.exports = function (robot) {
    * @param <String> url (required) Specified url
    * @return <integer> index >1: exist, -1: non exist
    */
-  var searchIndex = function (url) {
-    var urlArray = [];
+  const searchIndex = function (url) {
+    let urlArray = [];
     client.hkeys(key, function (err, _urlArray) {
       urlArray = _urlArray;
       console.log(typeof urlArray) //@@
