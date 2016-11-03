@@ -20,7 +20,7 @@ module.exports = function(robot) {
   //     results.push(robot.emit('healthExamine', site, flags, "bot"));
   //   }
   // });
-  
+
   /* Doctor方式 */
   // robot.hear(/she ex(?:amine)? with d(?:octor)?/i, function(msg) {
   //   var list, nurse, doctor, len, i, site;
@@ -49,6 +49,7 @@ module.exports = function(robot) {
   // };
 
   /* Add nurse to check */
+  //she add <url> <statusCode>
   robot.hear(/she[\s]+add[\s]+(\S+)[\s]+(\d+)$/i, function(msg) {
     var list, i, index, status, url, nurse;
     var key = 'sites';
@@ -71,6 +72,7 @@ module.exports = function(robot) {
   });
 
   /* Get List of nurse */
+  //she list|ls
   robot.hear(/she[\s]+li?st?$/i, function(msg) {
     var list, message, nurse;
     nurse = new Nurse(robot);
@@ -86,6 +88,7 @@ module.exports = function(robot) {
   });
 
   /* Update expected status code */
+  //she update|ud <index> <statusCode>
   robot.hear(/she[\s]+up?d(?:ate)?[\s]+(\d+)[\s]+(\d+)$/i, function(msg) {
     var list, status, url, nurse;
     nurse = new Nurse(robot);
@@ -100,6 +103,7 @@ module.exports = function(robot) {
   });
 
   /* Remove Url from list */
+  //she remove|rm <index>
   return robot.hear(/she[\s]+re?m(?:ove)?[\s]+(\d+)$/i, function(msg) {
     var list, nurse;
     nurse = new Nurse(robot);

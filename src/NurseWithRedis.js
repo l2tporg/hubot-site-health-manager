@@ -8,9 +8,9 @@ var redis = require("redis"),
   bluebird = require("bluebird");
 
 
-class Nurse {
-
-}
+// class Nurse {
+//
+// }
 
 module.exports = function (robot) {
   var key = "sites";

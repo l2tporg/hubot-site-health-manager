@@ -3,9 +3,9 @@ chai = require 'chai'
 
 expect = chai.expect
 
-helper = new Helper('../src/clinic.js')
+helper = new Helper('../src/Nurse.js')
 
-describe 'clinic', ->
+describe 'Nurse', ->
   beforeEach ->
     @room = helper.createRoom()
 
