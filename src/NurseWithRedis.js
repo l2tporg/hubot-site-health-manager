@@ -4,36 +4,40 @@
  * index操作を可能にするためにハッシュ型を採択
  */
 const redis = require("redis"),
-  client = redis.createClient(),
-  bluebird = require("bluebird");
+  client = redis.createClient();
 
 
-// class Nurse {
-//
-// }
-
-module.exports = function (robot) {
-  const key = "sites";
+class NurseWithRedis {
   // const key = channelKey || "key"; //default key is "sites"
-
   /** Implement **/
   /**
-   * list
+   * getListAll: get hash array of all, url and statusCode.
+   *
    * @param <none>
    * @return <Hash> { 'http://yahoo.co.jp': '200', 'https://google.com': '200' } -> forEachで処理shori
    */
-  const getList = function (callback) {
+  static getListAll(key, callback) {
     client.hgetall(key, callback);
   };
 
   /**
+   * getListKeys: get hash array of url names.
+   *
+   * @param <none>
+   * @return <Hash> { 'http://yahoo.co.jp', 'https://google.com' }
+   */
+  static getListKeys(key, callback) {
+    client.hkeys(key, callback);
+  };
+
+  /**
    * addUrl: adding some url and status pairs into list.
-   * ps    : if a key exists, it overwrite it.
-   * @param <Array, Function> dataArray, callback (required) data array adding into list.
+   *
+   * @param <Array, Function> dataArray, callback, msg (required) data array adding into list. msg is a Message object in hubot.
    * @return <String>  Simple string reply (http://redis.io/topics/protocol#simple-string-reply)
    */
-  const addUrl = function (dataArray, callback) {
-    /* dataArray: 元のurl,statusのarray, _urlArray: hkeysの検索結果のarray */
+  static addUrl(key, dataArray, callback, msg) {
+    /* dataArray: 元のurl,statusのarray, _dataArray: 最終的にaddする要素を格納するarray, _urlArray: hkeysの検索結果のarray */
     console.log("dataArray1: ", dataArray); //@@
 
     //swap用
@@ -47,10 +51,8 @@ module.exports = function (robot) {
 
         if(i%2 === 0) { //urlのみ対象
           if (_urlArray.indexOf(url) > -1) { //exists
-            // console.log("i: " + i);
-            // console.log("url: " + url);
             console.log("exists: true");
-            console.log("Adding ERROR: '" + url + "' already exist.");
+            msg.send("Adding ERROR: '" + url + "' already exist.");
           } else { //not exists
             console.log("exists: false");
             _dataArray.push(dataArray[i], dataArray[i+1]);
@@ -61,102 +63,74 @@ module.exports = function (robot) {
       console.log("_dataArray2: ", _dataArray); //@@ 最終的に追加するuRL
       client.hmset(key, _dataArray, callback);
     });
-
-    // //create array of url only
-    // var urlArray = [];
-    // dataArray.map(function (el, i) {
-    //   if (i % 2 === 0) {
-    //     urlArray.push(el);
-    //   }
-    // });
-    // console.log("urlArray: ", urlArray); //@@
-
-    // //eliminate existing elements from dataArray
-    // client.hkeys(key, function (err, _urlArray) {
-    //   urlArray.forEach(function (url, i) {
-    //     if (_urlArray.indexOf(url) > -1) { //exists
-    //       console.log("exists: true");
-    //       console.log("i: " + i);
-    //       console.log("Adding ERROR: '" + url + "' already exist.");
-    //       dataArray.splice(i, 2); //元のarrayからurl, statusを削除
-    //     } else { //not exists
-    //       console.log("exists: false");
-    //     }
-    //   });
-    //   console.log("dataArray2: " + dataArray); //@@ 加工後のuRL
-    //   client.hmset(key, dataArray, callback);
-    // });
-  };
-
-
-  /**
-   * removeUrl: remove some url and status pairs from list.
-   *
-   * @param <integer.., Function> index.., callback (required) indexes wanted to be removed from list.
-   * @return <integer> the number of removed elements.
-   */
-  /* remove */
-  const removeUrl = function (index, callback) {
-    /* 複数Urlに対応 */
-    // var delUrlArray = []; //削除するurl
-    // client.multi()
-    //   .hkeys(key, function (err, urlArray) {
-    //     console.log(urlArray); //@@
-    //     /* 該当するUrlをdelUrlArrayに格納する */
-    //     if (urlArray.length > 0) {
-    //       for(var i in index) {
-    //         delUrlArray.push(urlArray[i]);
-    //       }
-    //     }
-    //   })
-    //   .hdel(key, delUrlArray, callback)
-    //   .exec();
-
-    let urlArray; //削除するurl(swap用)
-    client.multi()
-      .hkeys(key, function (err, res) {
-        console.log("res: ", res); //@@ aray
-        urlArray = res[index];
-        console.log("urlArray: " + urlArray); //@@ string
-        client.hdel(key, urlArray, callback); //こいつをmultiで繋げたいのだが、おそらくbluebirdを使ってうまく実装する必要があるため、とりあえず内部で実行しちゃう。
-      })
-      .hgetall(key, getCallback) //delの実行よりも先に実行されてしまう
-      .exec();
   };
 
   /**
    *  updateUrl: (deprecated) update status code of existing url in list.
    *
    *  @param <integer, integer, Function> index, status, callback (required) Pair of pertinent index and new status code.
-   *  @return <String> Simple string reply
+   *  @return <integer> 0: overwrite(success), 1: new create(failed)
    *  */
-  var updateUrl = function (index, status, callback) {
-    var urlArray;
+  static updateUrl(key, index, status, callback) {
+    let url;
     client.multi()
-      .hkeys(key, function (err, res) {
-        console.log("res: " + res);
-        urlArray = res[index];
-        console.log("urlArray: " + urlArray); //@@ string
-        client.hset(key, urlArray, status, callback) //本当はbluebirdを使ってうまく外に出したい(multiで連鎖させたい)
+      .hkeys(key, function (err, _urlArray) {
+        //もしindexがoverflowだとundefinedが代入され、undefined:statusで登録されてしまう
+
+        if(_urlArray[index] !== undefined) {
+          url = _urlArray[index];
+          client.hset(key, url, status, callback); //promiseで繋げたい
+        } else { //index is overflow
+          callback({}, null);
+        }
       })
       .exec();
-
-    client.hgetall(key, getCallback); //upの実行よりも先に実行されてしまう
   };
 
   /**
-   *  searchIndex: Return index number of specified url.
+   * removeUrl: remove some url and status pairs from list.
    *
-   * @param <String> url (required) Specified url
-   * @return <integer> index >1: exist, -1: non exist
+   * @param <integer, Function> index, callback (required) indexes wanted to be removed from list.
+   * @return <integer> the number of removed elements.
    */
-  const searchIndex = function (url) {
-    let urlArray = [];
-    client.hkeys(key, function (err, _urlArray) {
-      urlArray = _urlArray;
-      console.log(typeof urlArray) //@@
-    });
-    console.log(urlArray.indexOf(url)) //@@
-    return urlArray.indexOf(url);
+  /* remove */
+  static removeUrl(key, index, callback) {
+    /* 複数Urlに対応 */
+    //対応しようと思ったのだが、hdelはarrayでフィールド指定ができないため一括削除することをデフォルトで想定していないと見た。
+
+    let url; //削除するurl(swap用)
+    client.multi()
+      .hkeys(key, function (err, _urlArray) {
+        //本来ならばここで_urlArray[index] !== undefined の判定が必要だが、これをあえて見逃すことでundefinedというfiledを削除してくれるため一石二鳥であるから判定は加えない。
+          url = _urlArray[index];
+          client.hdel(key, url, callback); //これをmultiで繋げたい
+      })
+      .exec();
   };
-};
+
+  /**
+   *  searchIndexIndexFromUrl: Return a index number of specified url.
+   *
+   * @param <String, Function> url(required), callback(required) Specified url
+   * @return <integer> index number, or -1 if not exists.
+   */
+  static searchIndexFromUrl(key, url, callback) {
+    client.hkeys(key, function (err, _urlArray) {
+      callback(_urlArray.indexOf(url));
+    });
+  };
+
+  /**
+   *  searchUrlFromIndex: Return a url name of specified index.
+   *
+   * @param <integer, Function> index(required), callback(required) index number of url
+   * @return <String> url name, or -1 if not exists.
+   */
+  static searchUrlFromIndex(key, index, callback) {
+    client.hkeys(key, function (err, _urlArray) {
+      callback(_urlArray[index]);
+    });
+  };
+}
+
+module.exports.NurseWithRedis = NurseWithRedis;
