@@ -3,9 +3,21 @@
  * redisでは重複検査メソッドなどがデフォルトで存在する
  * index操作を可能にするためにハッシュ型を採択
  */
-const redis = require("redis"),
-  client = redis.createClient();
+// let redis = require("redis"),
+//   client = redis.createClient();
 
+let redis = require("redis"), client;
+
+if(process.env.REDISTOGO_URL !== undefined) {
+  redisInfo = require("url").parse(process.env.REDISTOGO_URL);
+  client = redis.createClient(redisInfo.port, redisInfo.hostname);
+  client.auth(redisInfo.auth.split(":")[1]);
+} else {
+  client = redis.createClient();
+}
+
+console.log(client.host);
+console.log(client.port);
 
 class NurseWithRedis {
   // const key = channelKey || "key"; //default key is "sites"

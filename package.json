@@ -1,7 +1,5 @@
 {
   "dependencies": {
-    "bluebird": "^3.4.6",
-    "lodash": "^4.16.4",
     "redis": "^2.6.2",
     "request": "^2.76.0"
   },
@@ -25,5 +23,22 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
-  "author": "sak39"
+  "author": "sak39",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/l2tporg/hubot-site-health-manager.git"
+  },
+  "keywords": [
+    "hubot",
+    "site",
+    "health",
+    "examine",
+    "manager",
+    "check",
+    "alive"
+  ],
+  "bugs": {
+    "url": "https://github.com/l2tporg/hubot-site-health-manager/issues"
+  },
+  "homepage": "https://github.com/l2tporg/hubot-site-health-manager#readme"
 }

@@ -44,13 +44,13 @@ describe 'clinic', ->
         ['hubot', '']
       ]
 
-#  it 'responds when she update', ->
-#    @room.user.say('alice', '@hubot she ud 9 500').then =>
-#      expect(@room.messages).to.eql [
-#        ['alice', '@hubot she ud 9 500']
-#        ['hubot', '']
-#      ]
-#
+  it 'responds when she update', ->
+    @room.user.say('alice', '@hubot she ud 9 500').then =>
+      expect(@room.messages).to.eql [
+        ['alice', '@hubot she ud 9 500']
+        ['hubot', '']
+      ]
+
 #  it 'hears orly', ->
 #    @room.user.say('bob', 'just wanted to say orly').then =>
 #      expect(@room.messages).to.eql [

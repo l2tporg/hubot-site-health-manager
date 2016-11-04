@@ -46,49 +46,48 @@ module.exports = function(robot) {
   //   return results;
   // };
 
-  /** Redis Callback **/
+  // /** Redis Callback **/
   /* get test */
-  const getCallback = function (err, res) {
-    if (err) {
-      console.log("Getting ERROR: " + err);
-    } else if (res.length === 0) {
-      console.log("Getting ERROR: " + "empty");
-    } else {
-      console.dir(res);
-    }
-  };
-
-  /* add test */
-  const addCallback = function (err, res) {
-    if (res === 'OK') {
-      console.log("Adding: SUCCES");
-    } else {
-      console.log("Adding ERROR: " + "Unexpected Error");
-    }
-  };
-
-  // /* update test */
-  const updateCallback = function(err, res) {
-    console.log("ud err: " + err); //@@
-    console.log("ud res: " + res); //1: Not exist and set it newly. 0: already exist and overwrite it.
-  };
-
-  /* remove test */
-  const removeCallback = function(err, res) {
-    console.log("rm err: " + err); //@@
-    console.log("rm res: " + res); //number of deleted elements.
-  };
+  // const getCallback = function (err, res) {
+  //   if (err) {
+  //     console.log("Getting ERROR: " + err);
+  //   } else if (res.length === 0) {
+  //     console.log("Getting ERROR: " + "empty");
+  //   } else {
+  //     console.dir(res);
+  //   }
+  // };
+  //
+  // /* add test */
+  // const addCallback = function (err, res) {
+  //   if (res === 'OK') {
+  //     console.log("Adding: SUCCES");
+  //   } else {
+  //     console.log("Adding ERROR: " + "Unexpected Error");
+  //   }
+  // };
+  //
+  // // /* update test */
+  // const updateCallback = function(err, res) {
+  //   console.log("ud err: " + err); //@@
+  //   console.log("ud res: " + res); //1: Not exist and set it newly. 0: already exist and overwrite it.
+  // };
+  //
+  // /* remove test */
+  // const removeCallback = function(err, res) {
+  //   console.log("rm err: " + err); //@@
+  //   console.log("rm res: " + res); //number of deleted elements.
+  // };
 
 
 
   /** Get List of Nurse **/
   //she list|ls
-  robot.hear(/she[\s]+li?st?$/i, function(msg) {
+  robot.hear(/she[\s]+li?st?$/i, (msg) => {
     let field, list = [];
     const key = msg.envelope.room;
     console.log(key); //@@
-    Nurse.getListAll(key, function (err, _list) {
-      "use strict";
+    Nurse.getListAll(key, (err, _list) => {
       //url配列 _listはstatusCodeを参照するために残しておく
       for (field in _list) {
         list.push(field);
@@ -107,7 +106,7 @@ module.exports = function(robot) {
 
   /** Add Nurse to check **/
   //she add <url> <statusCode>
-  robot.hear(/she[\s]+add[\s]+(\S+)[\s]+(\d+)$/i, function(msg) {
+  robot.hear(/she[\s]+add[\s]+(\S+)[\s]+(\d+)$/i, (msg) => {
     let dataArray=[], url, status;
     const key = msg.envelope.room;
     url = msg.match[1];
@@ -115,7 +114,6 @@ module.exports = function(robot) {
     dataArray.push(url, status);
 
     Nurse.addUrl(key, dataArray, (err, res) => {
-      "use strict";
       if (res === 'OK') {
         msg.send("Adding SUCCES: '" + url + "' " + status);
       } else if (err) {
@@ -126,15 +124,16 @@ module.exports = function(robot) {
 
   /** Update expected status code **/
   //she update|ud <index> <statusCode>
-  robot.hear(/she[\s]+up?d(?:ate)?[\s]+(\d+)[\s]+(\d+)$/i, function(msg) {
+  robot.hear(/she[\s]+up?d(?:ate)?[\s]+(\d+)[\s]+(\d+)$/i, (msg) => {
     let index, status;
     const key = msg.envelope.room;
     index = msg.match[1];
     status = Number(msg.match[2]);
     Nurse.updateUrl(key, index, status, (err, res) => {
-      "use strict";
       if(err) {
         return msg.send("Updating ERROR: There are no such registered site.");
+      } else if(res === 1) {
+        return msg.send("Updating ERROR: New site has been registered now. It's not expected. You should check it.")
       } else {
         Nurse.searchUrlFromIndex(key, index, (url) => {
           return msg.send("Updating SUCCESS: '" + url + "' " + status);
@@ -145,13 +144,12 @@ module.exports = function(robot) {
 
   /** Remove Url from list **/
   //she remove|rm <index>
-  return robot.hear(/she[\s]+re?m(?:ove)?[\s]+(\d+)$/i, function(msg) {
+  return robot.hear(/she[\s]+re?m(?:ove)?[\s]+(\d+)$/i, (msg) =>{
     let index;
     const key = msg.envelope.room;
     //削除するurlは複数でもOKなので後々対応させる
     index = msg.match[1];
     Nurse.removeUrl(key, index, (err, res) => {
-      "use strict";
       if (err) {
         return msg.send("Removing ERROR: There are no such registered site.");
       } else if(res === 0) {
