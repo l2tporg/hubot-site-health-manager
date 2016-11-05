@@ -6,21 +6,18 @@
 // let redis = require("redis"),
 //   client = redis.createClient();
 
-let redis = require("redis"), client;
+const redis = require("redis"),
+      client = redis.createClient();
 
-if(process.env.REDISTOGO_URL !== undefined) {
-  redisInfo = require("url").parse(process.env.REDISTOGO_URL);
-  client = redis.createClient(redisInfo.port, redisInfo.hostname);
-  client.auth(redisInfo.auth.split(":")[1]);
-} else {
-  client = redis.createClient();
-}
-
-console.log(client.host);
-console.log(client.port);
+// if(process.env.REDISTOGO_URL !== undefined) {
+//   redisInfo = require("url").parse(process.env.REDISTOGO_URL);
+//   client = redis.createClient(redisInfo.port, redisInfo.hostname);
+//   client.auth(redisInfo.auth.split(":")[1]);
+// } else {
+//   client = redis.createClient();
+// }
 
 class NurseWithRedis {
-  // const key = channelKey || "key"; //default key is "sites"
   /** Implement **/
   /**
    * getListAll: get hash array of all, url and statusCode.
