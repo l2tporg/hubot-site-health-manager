@@ -152,18 +152,21 @@ module.exports = function (robot) {
   return robot.hear(/she[\s]+re?m(?:ove)?[\s]+(\d+)$/i, function (msg) {
     var index = void 0;
     var key = msg.envelope.room;
-    //削除するurlは複数でもOKなので後々対応させる
     index = msg.match[1];
-    Nurse.removeUrl(key, index, function (err, res) {
-      if (err) {
-        return msg.send("Removing ERROR: There are no such registered site.");
-      } else if (res === 0) {
-        return msg.send("Removing ERROR: There are no such registered site.");
-      } else {
-        Nurse.searchUrlFromIndex(key, index, function (url) {
+    //urlをswap
+    var url;
+    Nurse.searchUrlFromIndex(key, index, function (_url) {
+      url = _url;
+      Nurse.removeUrl(key, index, function (err, res) {
+        if (err) {
+          return msg.send("Removing ERROR: There are no such registered site.");
+        } else if (res === 0) {
+          return msg.send("Removing ERROR: There are no such registered site.");
+        } else {
+          console.log("remove url: " + url);
           return msg.send("Removing SUCCESS: '" + url + "'.");
-        });
-      }
-    });
+        }
+      });
+    }); //念のため中に入れる. Promiseが簡単に使えればいいのだが、es6に対応していないため迂闊に手を出したくない。
   });
 };
