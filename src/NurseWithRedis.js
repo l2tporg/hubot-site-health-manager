@@ -13,7 +13,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 //   client = redis.createClient();
 
 var redis = require("redis"),
-    client;
+  client;
 
 if(process.env.REDISTOGO_URL !== undefined) {
   var redisInfo = require("url").parse(process.env.REDISTOGO_URL);
@@ -35,8 +35,8 @@ var NurseWithRedis = function () {
     /**
      * getListAll: get hash array of all, url and statusCode.
      *
-     * @param <none>
-     * @return <Hash> { 'http://yahoo.co.jp': '200', 'https://google.com': '200' } -> forEachで処理shori
+     * @param <String, Function> key(required), callback(required)
+     * @return <Hash> { 'http://yahoo.co.jp': '200', 'https://google.com': '200' } -> forEachで処理
      */
     value: function getListAll(key, callback) {
       client.hgetall(key, callback);
@@ -48,7 +48,7 @@ var NurseWithRedis = function () {
     /**
      * getListKeys: get hash array of url names.
      *
-     * @param <none>
+     * @param <String, Function> key(required), callback(optional)
      * @return <Hash> { 'http://yahoo.co.jp', 'https://google.com' }
      */
     value: function getListKeys(key, callback) {
@@ -61,10 +61,10 @@ var NurseWithRedis = function () {
     /**
      * addUrl: adding some url and status pairs into list.
      *
-     * @param <Array, Function> dataArray, callback, msg (required) data array adding into list. msg is a Message object in hubot.
+     * @param <String, Array, Response, Function> key(required), dataArray(required), msg(required), callback(optional) data array adding into list. msg is a Message object in hubot.
      * @return <String>  Simple string reply (http://redis.io/topics/protocol#simple-string-reply)
      */
-    value: function addUrl(key, dataArray, callback, msg) {
+    value: function addUrl(key, dataArray, msg, callback) {
       /* dataArray: 元のurl,statusのarray, _dataArray: 最終的にaddする要素を格納するarray, _urlArray: hkeysの検索結果のarray */
       console.log("dataArray1: ", dataArray); //@@
 
@@ -90,7 +90,6 @@ var NurseWithRedis = function () {
             }
           }
         });
-
         console.log("_dataArray2: ", _dataArray); //@@ 最終的に追加するuRL
         client.hmset(key, _dataArray, callback);
       });
@@ -102,19 +101,18 @@ var NurseWithRedis = function () {
     /**
      *  updateUrl: (deprecated) update status code of existing url in list.
      *
-     *  @param <integer, integer, Function> index, status, callback (required) Pair of pertinent index and new status code.
-     *  @return <integer> 0: overwrite(success), 1: new create(failed)
+     *  @param <String, Number, Number, Function> key(required), index(required), status(required), callback(optional) Pair of pertinent index and new status code.
+     *  @return <Number> 0: overwrite(success), 1: new create(failed)
      *  */
     value: function updateUrl(key, index, status, callback) {
       var url = void 0;
       client.multi().hkeys(key, function (err, _urlArray) {
         //もしindexがoverflowだとundefinedが代入され、undefined:statusで登録されてしまう
 
-        if (_urlArray[index] !== undefined) {
+        if(_urlArray[index] !== undefined) {
           url = _urlArray[index];
           client.hset(key, url, status, callback); //promiseで繋げたい
-        } else {
-          //index is overflow
+        } else { //index is overflow
           callback({}, null);
         }
       }).exec();
@@ -126,10 +124,9 @@ var NurseWithRedis = function () {
     /**
      * removeUrl: remove some url and status pairs from list.
      *
-     * @param <integer, Function> index, callback (required) indexes wanted to be removed from list.
-     * @return <integer> the number of removed elements.
+     * @param <String, Number, Function> key(required), index(required), callback(optional) indexes wanted to be removed from list.
+     * @return <Number> the number of removed elements.
      */
-    /* remove */
     value: function removeUrl(key, index, callback) {
       /* 複数Urlに対応 */
       //対応しようと思ったのだが、hdelはarrayでフィールド指定ができないため一括削除することをデフォルトで想定していないと見た。
@@ -148,8 +145,8 @@ var NurseWithRedis = function () {
     /**
      *  searchIndexIndexFromUrl: Return a index number of specified url.
      *
-     * @param <String, Function> url(required), callback(required) Specified url
-     * @return <integer> index number, or -1 if not exists.
+     * @param <String, String, Function> key(required), url(required), callback(optional) Specified url
+     * @return <Number> index number, or -1 if not exists.
      */
     value: function searchIndexFromUrl(key, url, callback) {
       client.hkeys(key, function (err, _urlArray) {
@@ -163,7 +160,7 @@ var NurseWithRedis = function () {
     /**
      *  searchUrlFromIndex: Return a url name of specified index.
      *
-     * @param <integer, Function> index(required), callback(required) index number of url
+     * @param <String, Number, Function> key(required), index(required), callback(optional) index number of url
      * @return <String> url name, or -1 if not exists.
      */
     value: function searchUrlFromIndex(key, index, callback) {

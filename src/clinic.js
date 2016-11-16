@@ -117,13 +117,13 @@ module.exports = function (robot) {
     status = Number(msg.match[2]);
     dataArray.push(url, status);
 
-    Nurse.addUrl(key, dataArray, function (err, res) {
+    Nurse.addUrl(key, dataArray, msg, function (err, res) {
       if (res === 'OK') {
         msg.send("Adding SUCCES: '" + url + "' " + status);
       } else if (err) {
         msg.send("Adding ERROR: " + "Unexpected Error");
       }
-    }, msg);
+    });
   });
 
   /** Update expected status code **/

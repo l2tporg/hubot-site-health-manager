@@ -36,12 +36,12 @@ describe 'clinic', ->
         ['hubot', "Adding ERROR: Unexpected Error"]
       ]
 
-  it 'responds when she remove', ->
-    @room.user.say('alice', '@hubot she rm 0').then =>
-      expect(@room.messages).to.eql [
-        ['alice', '@hubot she rm 0']
-        ['hubot', '']
-      ]
+#  it 'responds when she remove', ->
+#    @room.user.say('alice', '@hubot she rm 0').then =>
+#      expect(@room.messages).to.eql [
+#        ['alice', '@hubot she rm 0']
+#        ['hubot', '']
+#      ]
 
 #  it 'responds when she update', ->
 #    @room.user.say('alice', '@hubot she ud 9 500').then =>
