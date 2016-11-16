@@ -35,12 +35,11 @@ describe 'clinic', ->
         ['hubot', "Adding ERROR: 'http://yahoo.co.jp' already exist."]
         ['hubot', "Adding ERROR: Unexpected Error"]
       ]
-#
-  it 'responds when she remove', ->
-    @room.user.say('alice', '@hubot she rm 9').then =>
-      expect(@room.messages).to.eql [
 
-        ['alice', '@hubot she rm 9']
+  it 'responds when she remove', ->
+    @room.user.say('alice', '@hubot she rm 0').then =>
+      expect(@room.messages).to.eql [
+        ['alice', '@hubot she rm 0']
         ['hubot', '']
       ]
 
