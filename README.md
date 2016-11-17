@@ -22,7 +22,7 @@
 
 ## <div id="Feature">Features</div>
 - Hubot-Site-Health-Managerで提供する機能は以下のとおりです。
-  1. 監視したいサイトリストのCRUD管理 -> [Commands](#commands)の項目を参照
+  1. 監視したいサイトリストのCRUD管理 -> [Commands](#Commands)の項目を参照
 
 ## <div id="Install">Install</div>
 ### 1. 
