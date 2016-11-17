@@ -22,7 +22,7 @@
 
 ## <div id="Feature">Features</div>
 - Hubot-Site-Health-Managerで提供する機能は以下のとおりです。
-  1. 監視したいサイトリストのCRUD管理 -> [Commands](#commands-all)の項目を参照
+  1. 監視したいサイトリストのCRUD管理 -> [Commands](#commands)の項目を参照
 
 ## <div id="Install">Install</div>
 ### 1. 
@@ -40,7 +40,7 @@ yarn add hubot-site-health-manager && yarn install
 `hubot-site-health-examine` を合わせてinstallする。
 
 
-## Commands-all
+## Commands
 
 ##### []:省略可能, <>:引数
 
