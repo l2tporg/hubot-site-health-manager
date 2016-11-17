@@ -2,6 +2,7 @@
 
 ## Description
 - これはRedisを使った、以下のような形式でUrlとStatusCodeのペアを格納するストレージマネージャです。
+
   > 
   ```js
   {
@@ -25,10 +26,19 @@
   1. 監視したいサイトリストのCRUD管理 -> [Commands](#Commands)の項目を参照
 
 ## <div id="Install">Install</div>
-1. `npm install --save hubot-site-health-examine`
-or `yarn add hubot-site-health-manager && yarn install` を実行
-2. `external-scripts.json`に`"hubot-site-health-manager"`を追記する。
-3. `hubot-site-health-examine` を合わせてinstallする。
+### 1. 
+```bash
+npm install --save hubot-site-health-examine
+```
+or 
+```bash
+yarn add hubot-site-health-manager && yarn install
+```
+
+### 2. 
+`external-scripts.json`に`"hubot-site-health-manager"`を追記する。
+### 3.
+`hubot-site-health-examine` を合わせてinstallする。
 
 
 ## <div id="Commands">Commands</div>
@@ -39,6 +49,7 @@ or `yarn add hubot-site-health-manager && yarn install` を実行
 - `[BOT_NAME] she list|ls` : 登録されたサイトをインデックス付きで表示
 - `[BOT_NAME] she update|ud <INDEX:int> <NEW_STATUS_CODE:int>` : 登録されたサイトのインデックスと新しいステータスを指定して更新
 - `[BOT_NAME] she remove|rm <INDEX:int>` : 登録されたサイトをインデックスを指定して削除
+
 > コマンドで `|` 区切りで指定されているものは、いずれかに一致という意味です。
 
 > なお, コマンド名がsheである理由はHubot-Site-Health-Examineの名残です。
@@ -49,7 +60,7 @@ or `yarn add hubot-site-health-manager && yarn install` を実行
 - 独自のストレージ様式を構築する場合のTips
 
 ### モジュールのimport
-```coffeescript
+```coffeescript:sample.coffee
 #ストレージ操作用のclassを読み込む
 Nurse = require('hubot-site-health-manager').NurseWithRedis
 ```
@@ -136,7 +147,7 @@ Nurse = require('hubot-site-health-manager').NurseWithRedis
 ```
 
 #### サンプルコード(addUrlを使ってみる)
-```coffeescript
+```coffeescript:sample.coffee
 # Nurseインスタンスを生成
 nurse = new Nurse(robot)
 # key指定
