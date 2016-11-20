@@ -1,4 +1,8 @@
 [![Build Status](https://travis-ci.org/l2tporg/hubot-site-health-manager.svg?branch=master)](https://travis-ci.org/l2tporg/hubot-site-health-manager)
+[![Code Climate](https://codeclimate.com/github/l2tporg/hubot-site-health-manager/badges/gpa.svg)](https://codeclimate.com/github/l2tporg/hubot-site-health-manager)
+[![Test Coverage](https://codeclimate.com/github/l2tporg/hubot-site-health-manager/badges/coverage.svg)](https://codeclimate.com/github/l2tporg/hubot-site-health-manager/coverage)
+[![Issue Count](https://codeclimate.com/github/l2tporg/hubot-site-health-manager/badges/issue_count.svg)](https://codeclimate.com/github/l2tporg/hubot-site-health-manager)
+[![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
 
 # Hubot Site Health Manager
 
