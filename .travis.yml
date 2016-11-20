@@ -1,0 +1,21 @@
+language: node_js
+node_js:
+- '0.12'
+- '0.10'
+- iojs
+sudo: false
+cache:
+  directories:
+  - node_modules
+notifications:
+  email: false
+  slack:
+    rooms:
+      secure: Hy3k+suMBH24Ke4hGcexSyIl9x10miNDVH+mNOFzXRVKH9BMarkpur+R4d5NTz4ZFH4rYYE523Zsa4pyME30MONEHdeXP6og00j5huAcn5rg8So5K3bdg/Doged/iuX/2Xks8/nb0vioNwqIyujTYp7VxTxFG7HO8Kb6d4aX5sgSHPeXHq6gqwIlkcHQrx0QkBQJsLrhshlKVyRkoRcBUzV6W0UVscZHe6W5MBftDmnPS8MXZsm3mtpKIwSerZyJ7MrAOR11HxFFwhoi5EpfTYNuC2IprfeH9L6uy/60i47W0Sufl0ORi8ayllya9JoUSIEixh6KtRiqVK/R/MWc1RkD18dKD3tNPMwtZyUTRCIlmt87vG8ldjdeUvEDdg0ueCt+btt+3MIFNsxea3X1E4uSPYy8T+0yyjVcNCgyRSm28xKDcw+8oFLDXQVFxaBTxBh98qQZbF767SSbAeaVCP3coVdurC394z7eEDl2arpmV0t+EIQNStjNzqUq90dv2LgfvhbfrVwrEvUvjU8V4wYPdHfQpMIZOR8/my7MGNhTy2UNx+ExuLiBMGjaYeB+y39pUJ9D76n5pFGDC6gAjhm/VRTLosAAKXbNDhF+8JDSzcdBXt9sw8MB+emT9RXkzZYuEMlDMxeEXfOpsntcCnCth5gPn2XyZZb+w8tXSiI=
+
+before_install:
+  npm install -g grunt-cli
+install:
+  npm install
+before_script:
+  grunt build
