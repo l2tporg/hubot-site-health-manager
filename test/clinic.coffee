@@ -30,7 +30,7 @@ describe 'clinic', ->
     @room.user.say('alice', '@hubot she add http://yahoo.co.jp 200').then =>
       expect(@room.messages).to.eql [
         ['alice', '@hubot she add http://yahoo.co.jp 200']
-        ['hubot', "Adding SUCCES: 'http://yahoo.co.jp' 200"]
+        ['hubot', "Adding SUCCESS: 'http://yahoo.co.jp' 200"]
       ]
 #
 #  it 'responds to she add', ->
