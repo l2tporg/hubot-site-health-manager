@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/l2tporg/hubot-site-health-manager.svg?branch=master)](https://travis-ci.org/l2tporg/hubot-site-health-manager)
+
 # Hubot Site Health Manager
 
 ## Description
