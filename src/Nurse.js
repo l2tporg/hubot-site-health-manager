@@ -21,7 +21,7 @@ var Nurse = function () {
     value: function getList() {
       console.log("Nurse: I'll go get patients."); //@@
       var list = void 0,
-        ref = void 0;
+          ref = void 0;
       list = (ref = this.robot.brain.get(this.brainKey)) !== null ? ref : [];
       return list;
     }
@@ -32,7 +32,7 @@ var Nurse = function () {
     /* Remove */
     value: function removeSite(index) {
       var list = void 0,
-        tmp = void 0;
+          tmp = void 0;
       list = this.getList();
 
       /* エラーチェック(範囲外判定) */
@@ -71,7 +71,7 @@ var Nurse = function () {
     /* index生成 */
     value: function searchIndex(obj, key) {
       var index = void 0,
-        newObj = void 0;
+          newObj = void 0;
       newObj = _.map(obj, 'url');
       index = newObj.indexOf(key);
       if (index > -1) {
@@ -84,8 +84,8 @@ var Nurse = function () {
     key: 'checkConfliction',
     value: function checkConfliction(obj, key) {
       if (_.findIndex(obj, {
-          url: key
-        }) > -1) {
+        url: key
+      }) > -1) {
         return false;
       } else {
         return true;
