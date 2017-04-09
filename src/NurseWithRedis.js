@@ -13,9 +13,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 //   client = redis.createClient();
 
 var redis = require("redis");
+var client = void 0;
 
 if (process.env.REDISTOGO_URL !== undefined) {
-  redisInfo = require("url").parse(process.env.REDISTOGO_URL);
+  var redisInfo = require("url").parse(process.env.REDISTOGO_URL);
   client = redis.createClient(redisInfo.port, redisInfo.hostname);
   client.auth(redisInfo.auth.split(":")[1]);
 } else {
