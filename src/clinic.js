@@ -182,7 +182,7 @@ module.exports = function (robot) {
 
     Nurse.addUrl(key, dataArray, msg, function (err, res) {
       if (res === 'OK') {
-        msg.send("Adding SUCCES: '" + url + "' " + status);
+        msg.send("Adding SUCCESS: '" + url + "' " + status);
       } else if (err) {
         msg.send("Adding ERROR: " + "Unexpected Error");
       }

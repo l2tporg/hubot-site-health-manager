@@ -23,10 +23,14 @@ describe 'clinic', ->
     @room.user.say('alice', '@hubot she ls').then =>
       expect(@room.messages).to.eql [
         ['alice', '@hubot she ls']
-        ['hubot', '']
-#        ['hubot', "0 : 'https://developer.ce/Global_Objects/Array/map' 200"]
-#        ['hubot', "1 : 'http://go.com' 200"]
-#        ['hubot', "2 : 'http://yahoo.co.jp' 200"]
+        ['hubot', 'Getting ERROR: empty']
+      ]
+
+  it 'responds to she add', ->
+    @room.user.say('alice', '@hubot she add http://yahoo.co.jp 200').then =>
+      expect(@room.messages).to.eql [
+        ['alice', '@hubot she add http://yahoo.co.jp 200']
+        ['hubot', "Adding SUCCESS: 'http://yahoo.co.jp' 200"]
       ]
 #
 #  it 'responds to she add', ->
