@@ -19,6 +19,14 @@ describe 'clinic', ->
 #        ['hubot', 'added 0: http://yahoo.co.jp, 200']
 #      ]
 
+  it 'responds to she add', ->
+    @room.user.say('alice', '@hubot she add http://yahoo.co.jp 200').then =>
+      expect(@room.messages).to.eql [
+        ['alice', '@hubot she add http://yahoo.co.jp 200']
+        ['hubot', "Adding SUCCESS: 'http://yahoo.co.jp' 200"]
+      ]
+
+
   it 'responds to she list', ->
     @room.user.say('alice', '@hubot she ls').then =>
       expect(@room.messages).to.eql [
@@ -26,13 +34,6 @@ describe 'clinic', ->
         ['hubot', 'Getting ERROR: empty']
       ]
 
-  it 'responds to she add', ->
-    @room.user.say('alice', '@hubot she add http://yahoo.co.jp 200').then =>
-      expect(@room.messages).to.eql [
-        ['alice', '@hubot she add http://yahoo.co.jp 200']
-        ['hubot', "Adding SUCCESS: 'http://yahoo.co.jp' 200"]
-      ]
-#
 #  it 'responds to she add', ->
 #    @room.user.say('alice', '@hubot she add http://yahoo.co.jp 200').then =>
 #      expect(@room.messages).to.eql [
@@ -41,12 +42,12 @@ describe 'clinic', ->
 #        ['hubot', "Adding ERROR: Unexpected Error"]
 #      ]
 #
-#  it 'responds when she remove', ->
-#    @room.user.say('alice', '@hubot she rm 0').then =>
-#      expect(@room.messages).to.eql [
-#        ['alice', '@hubot she rm 0']
-#        ['hubot', '']
-#      ]
+  it 'responds when she remove', ->
+    @room.user.say('alice', '@hubot she rm 0').then =>
+      expect(@room.messages).to.eql [
+        ['alice', '@hubot she rm 0']
+        ['hubot', '']
+      ]
 
 #  it 'responds when she update', ->
 #    @room.user.say('alice', '@hubot she ud 9 500').then =>

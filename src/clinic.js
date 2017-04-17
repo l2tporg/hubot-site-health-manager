@@ -216,17 +216,18 @@ module.exports = function (robot) {
     var index = void 0;
     var key = msg.envelope.room;
     //削除するurlは複数でもOKなので後々対応させる
-    index = msg.match[1];
-    Nurse.removeUrl(key, index, function (err, res) {
-      if (err) {
-        return msg.send("Removing ERROR: There are no such registered site.");
-      } else if (res === 0) {
-        return msg.send("Removing ERROR: There are no such registered site.");
-      } else {
-        Nurse.searchUrlFromIndex(key, index, function (url) {
-          return msg.send("Removing SUCCESS: '" + url + "'.");
-        });
-      }
-    });
+    index = msg.match[ 1 ];
+    Nurse.searchUrlFromIndex( key, index, function( url ) {
+      var swappedUrl = url; //削除後に参照するためのswap
+      Nurse.removeUrl( key, index, function( err, res ) {
+        if( err ) {
+          return msg.send( "Removing ERROR: There are no such registered site." );
+        } else if( res === 0 ) {
+          return msg.send( "Removing ERROR: There are no such registered site." );
+        } else {
+          return msg.send( "Removing SUCCESS: '" + swappedUrl + "'." );
+        }
+      } );
+    } );
   });
 };
