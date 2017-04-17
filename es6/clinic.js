@@ -177,6 +177,7 @@ module.exports = function( robot ) {
     dataArray.push( url, status );
 
     Nurse.addUrl( key, dataArray, msg, ( err, res ) => {
+      console.log('adding res: ', res); //@@
       if( res === 'OK' ) {
         msg.send( "Adding SUCCES: '" + url + "' " + status );
       } else if( err ) {

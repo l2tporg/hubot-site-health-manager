@@ -58,7 +58,7 @@ class NurseWithRedis {
    * @param <Array, Function> dataArray, callback, msg (required) data array adding into list. msg is a Message object in hubot.
    * @return <String>  Simple string reply (http://redis.io/topics/protocol#simple-string-reply)
    */
-  static addUrl( key, dataArray, callback, msg ) {
+  static addUrl( key, dataArray, msg, callback ) {
     /* dataArray: 元のurl,statusのarray, _dataArray: 最終的にaddする要素を格納するarray, _urlArray: hkeysの検索結果のarray */
     console.log( "dataArray1: ", dataArray ); //@@
 
